@@ -48,7 +48,7 @@ The remaining variables must be declared in the inventory.
 | gitea_ssh_domain     | string | SSH domain                 |
 | gitea_domain         | string | Domain to reach Gitea      |
 | gitea_http_port      | int    | Gitea HTTP port            |
-| gitea_ssh_prt        | int    | Gitea SSH port             |
+| gitea_ssh_port       | int    | Gitea SSH port             |
 | gitea_root_url       | string | Protocol + FQDN            |
 | gitea_lfs_jwt_secret | string | LFS storage secret         |
 | gitea_internal_token | string | Internal token             |
