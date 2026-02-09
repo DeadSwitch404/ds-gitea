@@ -31,6 +31,8 @@
 - name: Set the permissions of the Gitea binary
   ansible.builtin.file:
     path: /usr/local/bin/gitea
+    owner: root
+    group: "{{ gitea_group }}"
     mode: '0770'
 
 - name: Pause to generate and save the secrets in SOPS
