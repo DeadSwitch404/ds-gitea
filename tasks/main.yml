@@ -8,6 +8,42 @@
     update_cache: true
     state: present
 
+- name: Set up the PostgreSQL database
+  block:
+    - name: Ensure PostgreSQL Python client is installed
+      ansible.builtin.apt:
+        name: python3-psycopg2
+        update_cache: true
+        state: present
+
+    - name: Create the gitea DB role
+      community.postgresql.postgresql_user:
+        name: gitea
+        password: "{{ gitea_db_password }}"
+        role_attr_flags: "NOSUPERUSER,NOCREATEDB,NOCREATEROLE"
+      become_user: postgres
+
+    - name: Create the gitea database
+      community.postgresql.postgresql_db:
+        name: giteadb
+        owner: gitea
+        template: template0
+        encoding: UTF8
+        lc_collate: en_US.UTF-8
+        lc_ctype: en_US.UTF-8
+      become_user: postgres
+
+    - name: Ensure pg_hba.conf has local access for gitea
+      ansible.builtin.lineinfile:
+        path: /etc/postgresql/{{ postgresql_version }}/main/pg_hba.conf
+        regexp: '^local\s+giteadb\s+gitea\s+'
+        line: 'local    giteadb    gitea    scram-sha-256'
+        state: present
+        backup: yes
+      notify:
+        - Reload_postgresql
+  when: gitea_database_server | default('') == "postgresql"
+
 - name: Create the gitea group
   ansible.builtin.group:
     name: "{{ gitea_group }}"

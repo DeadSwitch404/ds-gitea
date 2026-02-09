@@ -5,6 +5,15 @@ RUN_USER = {{ gitea_user }}
 WORK_PATH = /var/lib/gitea
 RUN_MODE = prod
 
+{% if gitea_database_server | default('') == "postgresql" %}
+[database]
+DB_TYPE  = postgres
+HOST     = 127.0.0.1:5432
+NAME     = giteadb
+USER     = gitea
+PASSWD   = {{ gitea_db_password }}
+SSL_MODE = disable
+{% else %}
 [database]
 DB_TYPE = sqlite3
 HOST = 127.0.0.1:3306
@@ -15,6 +24,7 @@ SCHEMA =
 SSL_MODE = disable
 PATH = /var/lib/gitea/data/gitea.db
 LOG_SQL = false
+{% endif %}
 
 [repository]
 ROOT = /var/lib/gitea/data/gitea-repositories

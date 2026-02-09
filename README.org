@@ -4,20 +4,24 @@
 
 * ds-gitea
 
-This role installs and configures a basic [[https://docs.gitea.com/][Gitea]] server.
+This role installs and configures a [[https://docs.gitea.com/][Gitea]] server.
 
-Currently it uses SQLite as its database service.
+It uses SQLite as its default database service - with optional PostgreSQL support.
 
-Use the =ds-ufw= role to set up the firewall.
+Use the =ds-ufw= role to configure the firewall.
 
-* Features
+Use the =ds-posgresql= to configure the database.
 
-- Download and install the Gitea binary
-- Set up the user and group for the service
-- Create the required directory structure
-- Deploy the Gitea configuration
-- Deploy the Gitea service file
-- Enable and start the service
+* Role Workflow
+
+1. Download and install the Gitea binary
+2. (Optionally) Set up the PostgreSQL user and database
+3. Set up the user and group for the service
+4. Create the required directory structure
+5. Wait for the secret creation and storage in SOPS - if secrets are not present
+6. Deploy the Gitea configuration
+7. Deploy the Gitea service file
+8. Enable and start the service
 
 * Defaults
 
@@ -26,8 +30,6 @@ gitea_user: git
 gitea_group: git
 #+end_src
 
-The remaining variables must be declared in the inventory.
-
 * Requirements
 
 - Ansible >= 2.12
@@ -35,24 +37,27 @@ The remaining variables must be declared in the inventory.
 - git
 - sudo
 - ca-certificates
+- (optional) PosgreSQL database
 
 * Variables
 
-| Variable             | Type   | Comment                    |
-|----------------------+--------+----------------------------|
-| gitea_user           | string | Gitea user                 |
-| gitea_group          | string | Gitea group                |
-| gitea_binary_url     | string | Download URL of Gitea      |
-| gitea_checksum_url   | string | Checksum URL of the binary |
-| gitea_app_name       | string | Gitea application title    |
-| gitea_ssh_domain     | string | SSH domain                 |
-| gitea_domain         | string | Domain to reach Gitea      |
-| gitea_http_port      | int    | Gitea HTTP port            |
-| gitea_ssh_port       | int    | Gitea SSH port             |
-| gitea_root_url       | string | Protocol + FQDN            |
-| gitea_lfs_jwt_secret | string | LFS storage secret         |
-| gitea_internal_token | string | Internal token             |
-| gitea_jwt_secret     | string | JWT secret                 |
+| Variable              | Type   | Comment                                      |
+|-----------------------+--------+----------------------------------------------|
+| gitea_user            | string | Gitea user                                   |
+| gitea_group           | string | Gitea group                                  |
+| gitea_binary_url      | string | Download URL of Gitea                        |
+| gitea_checksum_url    | string | Checksum URL of the binary                   |
+| gitea_app_name        | string | Gitea server title                           |
+| gitea_ssh_domain      | string | SSH domain                                   |
+| gitea_domain          | string | Domain to reach Gitea                        |
+| gitea_http_port       | int    | HTTP port                                    |
+| gitea_ssh_port        | int    | SSH port                                     |
+| gitea_root_url        | string | Protocol + FQDN + port                       |
+| gitea_lfs_jwt_secret  | string | LFS storage secret                           |
+| gitea_internal_token  | string | Internal token                               |
+| gitea_jwt_secret      | string | JWT secret                                   |
+| gitea_database_server | string | DB server - 'postgresql' or empty for sqlite |
+| gitea_db_password     | string | PosgreSQL db password (if pgsql is used)     |
 
 * Handlers
 
@@ -91,10 +96,15 @@ Then re-run the playbook to finish the installation.
     gitea_domain: gitea.tomsitcafe.com
     gitea_http_port: 3000
     gitea_root_url: http://gitea.tomsitcafe.com:3000
+
+    # Optional
+    gitea_database_server: postgresql
+
     # In prod put these secrets in SOPS:
     gitea_lfs_jwt_secret: G9bZrRHMhRQ8w4R0KkH2VLnx2rzq81ROQ951IQjlMs4 
     gitea_internal_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYmYiOjE3NzA2Mzk1Njh9.ybbaeNLFiLbyvxfj4vkqhXSAXKRGpwvP8jIm9YLPgXw
     gitea_jwt_secret: uJni4x4e0AzpkLYc-t4keRJKOB6EaLzwVsdLeamkFyU
+    gitea_db_password: Eegh7Aothooph7pa6eu7eitha_zaim0G
 
   roles:
     - role: ds-gitea
