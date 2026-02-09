@@ -6,19 +6,22 @@
 
 This role installs and configures a [[https://docs.gitea.com/][Gitea]] server.
 
-It uses SQLite as its default database service.
+It uses SQLite as its default database service - with optional PostgreSQL support.
 
 Use the =ds-ufw= role to configure the firewall.
+
+Use the =ds-posgresql= to configure the database.
 
 * Role Workflow
 
 1. Download and install the Gitea binary
-2. Set up the user and group for the service
-3. Create the required directory structure
-4. Wait for the secret creation and storage in SOPS - if secrets are not present
-5. Deploy the Gitea configuration
-6. Deploy the Gitea service file
-7. Enable and start the service
+2. (Optionally) Set up the PostgreSQL user and database
+3. Set up the user and group for the service
+4. Create the required directory structure
+5. Wait for the secret creation and storage in SOPS - if secrets are not present
+6. Deploy the Gitea configuration
+7. Deploy the Gitea service file
+8. Enable and start the service
 
 * Defaults
 
@@ -34,24 +37,27 @@ gitea_group: git
 - git
 - sudo
 - ca-certificates
+- (optional) PosgreSQL database
 
 * Variables
 
-| Variable             | Type   | Comment                    |
-|----------------------+--------+----------------------------|
-| gitea_user           | string | Gitea user                 |
-| gitea_group          | string | Gitea group                |
-| gitea_binary_url     | string | Download URL of Gitea      |
-| gitea_checksum_url   | string | Checksum URL of the binary |
-| gitea_app_name       | string | Gitea server title         |
-| gitea_ssh_domain     | string | SSH domain                 |
-| gitea_domain         | string | Domain to reach Gitea      |
-| gitea_http_port      | int    | HTTP port                  |
-| gitea_ssh_port       | int    | SSH port                   |
-| gitea_root_url       | string | Protocol + FQDN + port     |
-| gitea_lfs_jwt_secret | string | LFS storage secret         |
-| gitea_internal_token | string | Internal token             |
-| gitea_jwt_secret     | string | JWT secret                 |
+| Variable              | Type   | Comment                                      |
+|-----------------------+--------+----------------------------------------------|
+| gitea_user            | string | Gitea user                                   |
+| gitea_group           | string | Gitea group                                  |
+| gitea_binary_url      | string | Download URL of Gitea                        |
+| gitea_checksum_url    | string | Checksum URL of the binary                   |
+| gitea_app_name        | string | Gitea server title                           |
+| gitea_ssh_domain      | string | SSH domain                                   |
+| gitea_domain          | string | Domain to reach Gitea                        |
+| gitea_http_port       | int    | HTTP port                                    |
+| gitea_ssh_port        | int    | SSH port                                     |
+| gitea_root_url        | string | Protocol + FQDN + port                       |
+| gitea_lfs_jwt_secret  | string | LFS storage secret                           |
+| gitea_internal_token  | string | Internal token                               |
+| gitea_jwt_secret      | string | JWT secret                                   |
+| gitea_database_server | string | DB server - 'postgresql' or empty for sqlite |
+| gitea_db_password     | string | PosgreSQL db password (if pgsql is used)     |
 
 * Handlers
 
