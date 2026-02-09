@@ -56,6 +56,30 @@ Remaining variables must be declared in the inventory.
 
 * Example Playbook
 
+#+begin_src yaml
+- name: Deploy a Gitea server
+  hosts: gitea
+  become: true
+
+  vars:
+    gitea_user: git
+    gitea_group: git
+    gitea_binary_url: https://dl.gitea.com/gitea/1.25.4/gitea-1.25.4-linux-amd64
+    gitea_checksum_url: https://dl.gitea.com/gitea/1.25.4/gitea-1.25.4-linux-amd64.sha256
+    gitea_app_name: Tom's IT Cafe Gitea Server
+    gitea_ssh_domain: gitea.tomsitcafe.com
+    gitea_domain: gitea.tomsitcafe.com
+    gitea_http_port: 3000
+    gitea_root_url: http://gitea.tomsitcafe.com:3000
+    # In prod put these secrets in SOPS:
+    gitea_lfs_jwt_secret: G9bZrRHMhRQ8w4R0KkH2VLnx2rzq81ROQ951IQjlMs4 
+    gitea_internal_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYmYiOjE3NzA2Mzk1Njh9.ybbaeNLFiLbyvxfj4vkqhXSAXKRGpwvP8jIm9YLPgXw
+    gitea_jwt_secret: uJni4x4e0AzpkLYc-t4keRJKOB6EaLzwVsdLeamkFyU
+
+  roles:
+    - role: ds-gitea
+#+end_src
+
 * License
 
 MIT
