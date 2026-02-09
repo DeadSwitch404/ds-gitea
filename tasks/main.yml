@@ -1,0 +1,102 @@
+---
+- name: Make sure dependencies are installed
+  ansible.builtin.apt:
+    name:
+      - git
+      - sudo
+      - ca-certificates
+    update_cache: true
+    state: present
+
+- name: Create the gitea group
+  ansible.builtin.group:
+    name: "{{ gitea_group }}"
+    system: true
+
+- name: Create the gitea user
+  ansible.builtin.user:
+    name: "{{ gitea_user }}"
+    group: "{{ gitea_group }}"
+    home: /home/{{ gitea_user }}
+    shell: /usr/sbin/nologin
+    system: true
+    create_home: true
+    
+- name: Download the Gitea binary
+  ansible.builtin.get_url:
+    url: "{{ gitea_binary_url }}"
+    dest: /usr/local/bin/gitea
+    checksum: "sha256:{{ gitea_checksum_url }}"
+
+- name: Pause to save the generated secrets in SOPS
+  ansible.builtin.pause:
+    prompt: |
+      [SECURITY NOTICE]
+      If this is a fresh install, generate these secrets:
+      1. gitea generate secret INTERNAL_TOKEN
+      2. gitea generate secret JWT_SECRET
+      3. gitea generate secret LFS_JWT_SECRET
+      Copy the following keys into SOPS:
+        - gitea_lfs_jwt_secret
+        - gitea_internal_token
+        - gitea_jwt_secret
+      Press ENTER once done to continue.
+  when: gitea_internal_token is not defined
+
+- name: Stop play until SOPS secrets are added
+  ansible.builtin.meta: end_play
+  when: gitea_internal_token is not defined
+
+- name: Create the data dir base
+  ansible.builtin.file:
+    path: /var/lib/gitea
+    owner: "{{ gitea_user }}"
+    group: "{{ gitea_group }}"
+    mode: '0750'
+    state: directory
+
+- name: Create the data dirs
+  ansible.builtin.file:
+    path: "{{ item }}"
+    owner: "{{ gitea_user }}"
+    group: "{{ gitea_group }}"
+    mode: '0750'
+    state: directory
+  loop:
+    - /var/lib/gitea/custom
+    - /var/lib/gitea/data
+    - /var/lib/gitea/log
+
+- name: Create the config dir
+  ansible.builtin.file:
+    path: /etc/gitea
+    owner: root
+    group: "{{ gitea_group }}"
+    mode: '0750'
+    state: directory
+
+- name: Deploy the systemd service unit
+  ansible.builtin.template:
+    src: gitea.service.j2
+    dest: /etc/systemd/system/gitea.service
+    owner: root
+    group: root
+    mode: '0644'
+  notify:
+    - Reload_systemd
+
+- name: Deploy the Gitea configuration
+  ansible.builtin.template:
+    src: app.ini.j2
+    dest: /etc/gitea/app.ini
+    owner: root
+    group: "{{ gitea_group }}"
+    mode: '0640'
+  notify:
+    - Restart_gitea
+    
+- name: Start and enable Gitea
+  ansible.builtin.systemd_service:
+    name: gitea.service
+    state: started
+    enabled: true

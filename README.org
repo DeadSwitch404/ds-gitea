@@ -1,0 +1,63 @@
+#+TITLE: Gitea Server Installer Role
+#+AUTHOR: DeadSwitch | The Silent Architect
+#+OPTIONS: toc:nil num:nil \n:t
+
+* ds-gitea
+
+This role installs and configures a basic [[https://docs.gitea.com/][Gitea]] server.
+
+* Features
+
+- Download and install the Gitea binary
+- Set up the user and group for the service
+- Create the required directory structure
+- Deploy the Gitea configuration
+- Deploy the Gitea service file
+- Enable and start the service
+
+* Defaults
+
+#+begin_src yaml
+gitea_user: git
+gitea_group: git
+#+end_src
+
+Remaining variables must be declared in the inventory.
+
+* Requirements
+
+- Ansible >= 2.12
+- Debian-based OS (Bookworm, Trixie)
+- git
+- sudo
+- ca-certificates
+
+* Variables
+
+| Variable             | Type   | Comment                    |
+|----------------------+--------+----------------------------|
+| gitea_user           | string | Gitea user                 |
+| gitea_group          | string | Gitea group                |
+| gitea_binary_url     | string | Download URL of Gitea      |
+| gitea_checksum_url   | string | Checksum URL of the binary |
+| gitea_app_name       | string | Gitea application title    |
+| gitea_ssh_domain     | string | SSH domain                 |
+| gitea_domain         | string | Domain to reach Gitea      |
+| gitea_http_port      | int    | Gitea HTTP port            |
+| gitea_root_url       | string | Protocoll + FQDN           |
+| gitea_lfs_jwt_secret | string | LFS storage secret         |
+| gitea_internal_token | string | Internal token             |
+| gitea_jwt_secret     | string | JWT secret                 |
+
+* Handlers
+
+- =Reload_systemd=: It runs a =daemon-reload=
+- =Restart_gitea=: It restarts the Gitea service
+
+* Example Playbook
+
+* License
+
+MIT
+
+=[ Fear the Silence. Fear the Switch. ]=
