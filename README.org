@@ -54,6 +54,19 @@ Remaining variables must be declared in the inventory.
 - =Reload_systemd=: It runs a =daemon-reload=
 - =Restart_gitea=: It restarts the Gitea service
 
+* Secrets
+
+Always store the production secrets in SOPS, or in Vault.
+
+Generate the secrets manually when the playbook stops:
+
+#+begin_src shell
+gitea generate secret INTERNAL_TOKEN
+gitea generate secret JWT_SECRET
+#+end_src
+
+Use the =JWT_SECRET= command to generate the =gitea_lfs_jwt_secret= as well. It's an alias.
+
 * Example Playbook
 
 #+begin_src yaml
