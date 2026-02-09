@@ -28,6 +28,11 @@
     dest: /usr/local/bin/gitea
     checksum: "sha256:{{ gitea_checksum_url }}"
 
+- name: Set the permissions of the Gitea binary
+  ansible.builtin.file:
+    path: /usr/local/bin/gitea
+    mode: '0770'
+
 - name: Pause to generate and save the secrets in SOPS
   ansible.builtin.pause:
     prompt: |
