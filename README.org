@@ -4,20 +4,21 @@
 
 * ds-gitea
 
-This role installs and configures a basic [[https://docs.gitea.com/][Gitea]] server.
+This role installs and configures a [[https://docs.gitea.com/][Gitea]] server.
 
-Currently it uses SQLite as its database service.
+It uses SQLite as its default database service.
 
-Use the =ds-ufw= role to set up the firewall.
+Use the =ds-ufw= role to configure the firewall.
 
-* Features
+* Role Workflow
 
-- Download and install the Gitea binary
-- Set up the user and group for the service
-- Create the required directory structure
-- Deploy the Gitea configuration
-- Deploy the Gitea service file
-- Enable and start the service
+1. Download and install the Gitea binary
+2. Set up the user and group for the service
+3. Create the required directory structure
+4. Wait for the secret creation and storage in SOPS - if secrets are not present
+5. Deploy the Gitea configuration
+6. Deploy the Gitea service file
+7. Enable and start the service
 
 * Defaults
 
@@ -25,8 +26,6 @@ Use the =ds-ufw= role to set up the firewall.
 gitea_user: git
 gitea_group: git
 #+end_src
-
-The remaining variables must be declared in the inventory.
 
 * Requirements
 
@@ -44,12 +43,12 @@ The remaining variables must be declared in the inventory.
 | gitea_group          | string | Gitea group                |
 | gitea_binary_url     | string | Download URL of Gitea      |
 | gitea_checksum_url   | string | Checksum URL of the binary |
-| gitea_app_name       | string | Gitea application title    |
+| gitea_app_name       | string | Gitea server title         |
 | gitea_ssh_domain     | string | SSH domain                 |
 | gitea_domain         | string | Domain to reach Gitea      |
-| gitea_http_port      | int    | Gitea HTTP port            |
-| gitea_ssh_port       | int    | Gitea SSH port             |
-| gitea_root_url       | string | Protocol + FQDN            |
+| gitea_http_port      | int    | HTTP port                  |
+| gitea_ssh_port       | int    | SSH port                   |
+| gitea_root_url       | string | Protocol + FQDN + port     |
 | gitea_lfs_jwt_secret | string | LFS storage secret         |
 | gitea_internal_token | string | Internal token             |
 | gitea_jwt_secret     | string | JWT secret                 |
@@ -91,6 +90,7 @@ Then re-run the playbook to finish the installation.
     gitea_domain: gitea.tomsitcafe.com
     gitea_http_port: 3000
     gitea_root_url: http://gitea.tomsitcafe.com:3000
+
     # In prod put these secrets in SOPS:
     gitea_lfs_jwt_secret: G9bZrRHMhRQ8w4R0KkH2VLnx2rzq81ROQ951IQjlMs4 
     gitea_internal_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYmYiOjE3NzA2Mzk1Njh9.ybbaeNLFiLbyvxfj4vkqhXSAXKRGpwvP8jIm9YLPgXw
