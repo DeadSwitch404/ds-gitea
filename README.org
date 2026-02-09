@@ -97,10 +97,14 @@ Then re-run the playbook to finish the installation.
     gitea_http_port: 3000
     gitea_root_url: http://gitea.tomsitcafe.com:3000
 
+    # Optional
+    gitea_database_server: postgresql
+
     # In prod put these secrets in SOPS:
     gitea_lfs_jwt_secret: G9bZrRHMhRQ8w4R0KkH2VLnx2rzq81ROQ951IQjlMs4 
     gitea_internal_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYmYiOjE3NzA2Mzk1Njh9.ybbaeNLFiLbyvxfj4vkqhXSAXKRGpwvP8jIm9YLPgXw
     gitea_jwt_secret: uJni4x4e0AzpkLYc-t4keRJKOB6EaLzwVsdLeamkFyU
+    gitea_db_password: Eegh7Aothooph7pa6eu7eitha_zaim0G
 
   roles:
     - role: ds-gitea
