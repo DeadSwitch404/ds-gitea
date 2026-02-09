@@ -6,6 +6,10 @@
 
 This role installs and configures a basic [[https://docs.gitea.com/][Gitea]] server.
 
+Currently it uses SQLite as its database service.
+
+Use the =ds-ufw= role to set up the firewall.
+
 * Features
 
 - Download and install the Gitea binary
@@ -22,7 +26,7 @@ gitea_user: git
 gitea_group: git
 #+end_src
 
-Remaining variables must be declared in the inventory.
+The remaining variables must be declared in the inventory.
 
 * Requirements
 
@@ -56,7 +60,7 @@ Remaining variables must be declared in the inventory.
 
 * Secrets
 
-Always store the production secrets in SOPS, or in Vault.
+Always store the production secrets in SOPS, or in Ansible Vault.
 
 Generate the secrets manually when the playbook stops:
 
@@ -66,6 +70,8 @@ gitea generate secret JWT_SECRET
 #+end_src
 
 Use the =JWT_SECRET= command to generate the =gitea_lfs_jwt_secret= as well. It's an alias.
+
+Then re-run the playbook to finish the installation.
 
 * Example Playbook
 
