@@ -6,6 +6,10 @@
 
 This role installs and configures a basic [[https://docs.gitea.com/][Gitea]] server.
 
+Currently it uses SQLite as its database service.
+
+Use the =ds-ufw= role to set up the firewall.
+
 * Features
 
 - Download and install the Gitea binary
@@ -22,7 +26,7 @@ gitea_user: git
 gitea_group: git
 #+end_src
 
-Remaining variables must be declared in the inventory.
+The remaining variables must be declared in the inventory.
 
 * Requirements
 
@@ -54,7 +58,46 @@ Remaining variables must be declared in the inventory.
 - =Reload_systemd=: It runs a =daemon-reload=
 - =Restart_gitea=: It restarts the Gitea service
 
+* Secrets
+
+Always store the production secrets in SOPS, or in Ansible Vault.
+
+Generate the secrets manually when the playbook stops:
+
+#+begin_src shell
+gitea generate secret INTERNAL_TOKEN
+gitea generate secret JWT_SECRET
+#+end_src
+
+Use the =JWT_SECRET= command to generate the =gitea_lfs_jwt_secret= as well. It's an alias.
+
+Then re-run the playbook to finish the installation.
+
 * Example Playbook
+
+#+begin_src yaml
+- name: Deploy a Gitea server
+  hosts: gitea
+  become: true
+
+  vars:
+    gitea_user: git
+    gitea_group: git
+    gitea_binary_url: https://dl.gitea.com/gitea/1.25.4/gitea-1.25.4-linux-amd64
+    gitea_checksum_url: https://dl.gitea.com/gitea/1.25.4/gitea-1.25.4-linux-amd64.sha256
+    gitea_app_name: Tom's IT Cafe Gitea Server
+    gitea_ssh_domain: gitea.tomsitcafe.com
+    gitea_domain: gitea.tomsitcafe.com
+    gitea_http_port: 3000
+    gitea_root_url: http://gitea.tomsitcafe.com:3000
+    # In prod put these secrets in SOPS:
+    gitea_lfs_jwt_secret: G9bZrRHMhRQ8w4R0KkH2VLnx2rzq81ROQ951IQjlMs4 
+    gitea_internal_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYmYiOjE3NzA2Mzk1Njh9.ybbaeNLFiLbyvxfj4vkqhXSAXKRGpwvP8jIm9YLPgXw
+    gitea_jwt_secret: uJni4x4e0AzpkLYc-t4keRJKOB6EaLzwVsdLeamkFyU
+
+  roles:
+    - role: ds-gitea
+#+end_src
 
 * License
 

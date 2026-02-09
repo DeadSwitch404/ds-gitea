@@ -28,17 +28,24 @@
     dest: /usr/local/bin/gitea
     checksum: "sha256:{{ gitea_checksum_url }}"
 
-- name: Pause to save the generated secrets in SOPS
+- name: Set the permissions of the Gitea binary
+  ansible.builtin.file:
+    path: /usr/local/bin/gitea
+    owner: "{{ gitea_user }}"
+    group: "{{ gitea_group }}"
+    mode: '0750'
+
+- name: Pause to generate and save the secrets in SOPS
   ansible.builtin.pause:
     prompt: |
       [SECURITY NOTICE]
       If this is a fresh install, generate these secrets:
-      1. gitea generate secret INTERNAL_TOKEN
-      2. gitea generate secret JWT_SECRET
-      3. gitea generate secret LFS_JWT_SECRET
+      1. gitea generate secret INTERNAL_TOKEN - for gitea_internal_token
+      2. gitea generate secret JWT_SECRET - for gitea_lfs_jwt_secret
+      3. gitea generate secret JWT_SECRET - for gitea_jwt_secret
       Copy the following keys into SOPS:
-        - gitea_lfs_jwt_secret
         - gitea_internal_token
+        - gitea_lfs_jwt_secret
         - gitea_jwt_secret
       Press ENTER once done to continue.
   when: gitea_internal_token is not defined
