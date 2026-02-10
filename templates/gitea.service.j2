@@ -3,6 +3,10 @@
 [Unit]
 Description=Gitea (Git with a cup of tea)
 After=network.target
+{% if gitea_database_server | default('') == "postgresql" %}
+Wants=postgresql.service
+After=postgresql.service
+{% endif %}
 
 [Service]
 RestartSec=2s
