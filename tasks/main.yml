@@ -44,6 +44,28 @@
         - Reload_postgresql
   when: gitea_database_server | default('') == "postgresql"
 
+- name: Set up the reverse proxy
+  block:
+    - name: Deploy the site configuration
+      ansible.builtin.template:
+        src: gitea.j2
+        dest: /etc/nginx/sites-available/gitea
+        owner: root
+        group: root
+        mode: '0644'
+      notify: Reload_nginx
+
+    - name: Enable the gitea site
+      ansible.builtin.file:
+        src: /etc/nginx/sites-available/gitea
+        dest: /etc/nginx/sites-enabled/gitea
+        state: link
+        owner: root
+        group: root
+        force: true
+      notify: Reload_nginx
+  when: gitea_reverse_proxy | default('') == "nginx"
+
 - name: Create the gitea group
   ansible.builtin.group:
     name: "{{ gitea_group }}"
@@ -54,7 +76,8 @@
     name: "{{ gitea_user }}"
     group: "{{ gitea_group }}"
     home: /home/{{ gitea_user }}
-    shell: /usr/sbin/nologin
+    shell: /bin/bash
+    password: '*'
     system: true
     create_home: true
     
@@ -70,6 +93,11 @@
     owner: "{{ gitea_user }}"
     group: "{{ gitea_group }}"
     mode: '0750'
+
+- name: Generate self-signed certificates
+  ansible.builtin.include_tasks:
+    file: self-signed-cert.yml
+  when: gitea_self_signed | default(false)
 
 - name: Pause to generate and save the secrets in SOPS
   ansible.builtin.pause:

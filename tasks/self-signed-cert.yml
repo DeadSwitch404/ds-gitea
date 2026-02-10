@@ -1,0 +1,18 @@
+---
+- name: Create the certs directory
+  ansible.builtin.file:
+    path: /var/lib/gitea/certs
+    owner: "{{ gitea_user }}"
+    group: "{{ gitea_group }}"
+    mode: '0750'
+    state: directory
+
+- name: Generate the self-signed certs for Gitea
+  ansible.builtin.command: >
+    gitea cert
+    --host {{ gitea_domain }},{{ gitea_ssh_domain }}
+    --out /var/lib/gitea/certs/cert.pem
+    --keyout /var/lib/gitea/certs/key.pem
+  become_user: "{{ gitea_user }}"
+  args:
+    creates: /var/lib/gitea/certs/cert.pem
