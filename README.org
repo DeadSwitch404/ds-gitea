@@ -20,7 +20,7 @@ Use the =ds-posgresql= to configure the database.
 4. Create the required directory structure
 5. Wait for the secret creation and storage in SOPS - if secrets are not present
 6. Deploy the Gitea configuration
-7. Deploy the Gitea service file
+7. Deploy the Gitea systemd service file (With Postgresql support if the backend is used)
 8. Enable and start the service
 
 * Defaults
@@ -28,6 +28,8 @@ Use the =ds-posgresql= to configure the database.
 #+begin_src yaml
 gitea_user: git
 gitea_group: git
+gitea_http_port: 3000
+gitea_ssh_port: 22
 #+end_src
 
 * Requirements
