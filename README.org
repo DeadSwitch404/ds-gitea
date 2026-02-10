@@ -8,13 +8,13 @@ This role installs and configures a [[https://docs.gitea.com/][Gitea]] server.
 
 It uses SQLite as its default database service - with optional PostgreSQL support.
 
-The role can set up a reverse proxy with SSL.
+The role can set up a reverse proxy with SSL using Nginx.
 
 - Use the =ds-ufw= role to configure the firewall.
 - Use the =ds-posgresql= role to configure the database.
 - Use the =ds-nginx= role to install the proxy server.
 
-* Role Workflow
+* Role Behavior
 
 1. Download and install the Gitea binary
 2. (Optionally) Set up the PostgreSQL user and database
@@ -22,8 +22,8 @@ The role can set up a reverse proxy with SSL.
 4. Create the required directory structure
 5. Wait for the secret creation and storage in SOPS - if secrets are not present
 6. Deploy the Gitea configuration
-7. Deploy the Gitea systemd service file (With Postgresql support if the backend is used)
-8. Set up the reverse proxy with optional SSL
+7. Deploy the Gitea systemd service file
+8. (Optionally) Set up the reverse proxy with optional SSL
 9. Enable and start the service
 
 * Defaults
@@ -80,7 +80,7 @@ gitea_reverse_proxy: ''
 
 * Secrets
 
-Always store the production secrets in SOPS, or in Ansible Vault.
+Always save the production secrets in SOPS, or in Ansible Vault.
 
 Generate the secrets manually when the playbook stops:
 
