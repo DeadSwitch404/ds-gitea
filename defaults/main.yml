@@ -1,3 +1,5 @@
 ---
 gitea_user: git
 gitea_group: git
+gitea_http_port: 3000
+gitea_ssh_port: 22
