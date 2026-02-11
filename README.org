@@ -38,6 +38,7 @@ gitea_http_port: 3000
 gitea_ssh_port: 22
 gitea_database_server: ''
 gitea_reverse_proxy: ''
+gitea_require_signin_view: false
 #+end_src
 
 * Requirements
@@ -53,31 +54,32 @@ gitea_reverse_proxy: ''
 
 * Variables
 
-| Variable                   | Type    | Comment                                      |
-|----------------------------+---------+----------------------------------------------|
-| gitea_user                 | string  | Gitea user                                   |
-| gitea_group                | string  | Gitea group                                  |
-| gitea_binary_url           | string  | Download URL of Gitea                        |
-| gitea_checksum_url         | string  | Checksum URL of the binary                   |
-| gitea_app_name             | string  | Gitea server title                           |
-| gitea_ssh_domain           | string  | SSH domain                                   |
-| gitea_domain               | string  | Domain to reach Gitea                        |
-| gitea_http_port            | int     | HTTP port                                    |
-| gitea_ssh_port             | int     | SSH port                                     |
-| gitea_root_url             | string  | Protocol + FQDN + port                       |
-| gitea_lfs_jwt_secret       | string  | LFS storage secret                           |
-| gitea_internal_token       | string  | Internal token                               |
-| gitea_jwt_secret           | string  | JWT secret                                   |
-| gitea_database_server      | string  | DB server - 'postgresql' or empty for sqlite |
-| gitea_db_password          | string  | PosgreSQL db password (if pgsql is used)     |
-| gitea_reverse_proxy        | string  | Reverse proxy to use or not set for no proxy |
-| gitea_enable_https         | boolean | Configure HTTPS in the proxy                 |
-| gitea_ssl_cert             | string  | SSL certificate                              |
-| gitea_ssl_key              | string  | SSL key                                      |
-| gitea_enable_http_redirect | boolean | Redirect HTTP to HTTPS                       |
-| gitea_self_signed          | boolean | Generate a self-signed cert and key          |
-| gitea_lets_encrypt         | boolean | Use certbot to configure the SSL             |
-| gitea_certbot_email        | string  | Email to register the certificates           |
+| Variable                   | Type    | Comment                                          |
+|----------------------------+---------+--------------------------------------------------|
+| gitea_user                 | string  | Gitea user                                       |
+| gitea_group                | string  | Gitea group                                      |
+| gitea_binary_url           | string  | Download URL of Gitea                            |
+| gitea_checksum_url         | string  | Checksum URL of the binary                       |
+| gitea_app_name             | string  | Gitea server title                               |
+| gitea_ssh_domain           | string  | SSH domain                                       |
+| gitea_domain               | string  | Domain to reach Gitea                            |
+| gitea_http_port            | int     | HTTP port                                        |
+| gitea_ssh_port             | int     | SSH port                                         |
+| gitea_root_url             | string  | Protocol + FQDN + port                           |
+| gitea_lfs_jwt_secret       | string  | LFS storage secret                               |
+| gitea_internal_token       | string  | Internal token                                   |
+| gitea_jwt_secret           | string  | JWT secret                                       |
+| gitea_database_server      | string  | DB server - 'postgresql' or empty for sqlite     |
+| gitea_db_password          | string  | PosgreSQL db password (if pgsql is used)         |
+| gitea_reverse_proxy        | string  | Reverse proxy to use or not set for no proxy     |
+| gitea_enable_https         | boolean | Configure HTTPS in the proxy                     |
+| gitea_ssl_cert             | string  | SSL certificate                                  |
+| gitea_ssl_key              | string  | SSL key                                          |
+| gitea_enable_http_redirect | boolean | Redirect HTTP to HTTPS                           |
+| gitea_self_signed          | boolean | Generate a self-signed cert and key              |
+| gitea_lets_encrypt         | boolean | Use certbot to configure the SSL                 |
+| gitea_certbot_email        | string  | Email to register the certificates               |
+| gitea_require_signin_view  | boolean | If false, public repos are visible without login |
 
 * Handlers
 
