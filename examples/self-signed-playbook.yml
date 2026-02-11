@@ -1,0 +1,31 @@
+- name: Install Gitea
+  hosts: gitea
+  become: true
+
+  roles:
+    - role: ds-postgresql
+    - role: ds-nginx
+    - role: ds-gitea
+      vars:
+        gitea_user: git
+        gitea_group: git
+        gitea_database_server: postgresql
+        gitea_binary_url: https://dl.gitea.com/gitea/1.25.4/gitea-1.25.4-linux-amd64
+        gitea_checksum_url: https://dl.gitea.com/gitea/1.25.4/gitea-1.25.4-linux-amd64.sha256
+        gitea_app_name: Tom's IT Cafe Test Gitea Server
+        gitea_domain: gitea.tomsitcafe.com
+        gitea_ssh_domain: "{{ gitea_domain }}"
+        gitea_http_port: 3000
+        gitea_ssh_port: 22
+        gitea_root_url: https://{{ gitea_domain }}
+        gitea_reverse_proxy: nginx
+        gitea_enable_https: true
+        gitea_self_signed: true
+        gitea_ssl_cert: /var/lib/gitea/certs/cert.pem
+        gitea_ssl_key: /var/lib/gitea/certs/key.pem
+        gitea_enable_http_redirect: true
+        # Secrets to SOPS
+        gitea_lfs_jwt_secret: G9bZrRHMhRQ8w4R0KkH2VLnx2rzq81ROQ951IQjlMs4 
+        gitea_internal_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYmYiOjE3NzA2Mzk1Njh9.ybbaeNLFiLbyvxfj4vkqhXSAXKRGpwvP8jIm9YLPgXw
+        gitea_jwt_secret: uJni4x4e0AzpkLYc-t4keRJKOB6EaLzwVsdLeamkFyU
+        gitea_db_password: Eegh7Aothooph7pa6eu7eitha_zaim0G
