@@ -1,4 +1,4 @@
-#+TITLE: Gitea Server Installer Role
+#+TITLE: Gitea Server Role
 #+AUTHOR: DeadSwitch | The Silent Architect
 #+OPTIONS: toc:nil num:nil \n:t
 
@@ -6,29 +6,28 @@
 
 * ds-gitea
 
-This role installs and configures a [[https://docs.gitea.com/][Gitea]] server.
+This role can install and configures a [[https://docs.gitea.com/][Gitea]] server.
 
-It uses SQLite as its default database service - with optional PostgreSQL support.
+It uses SQLite as its default database service - with optional PostgreSQL support (=ds-posgresql=).
 
-The role can set up a reverse proxy with SSL using Nginx.
+The role can set up a reverse proxy with SSL using Nginx (=ds-nginx=).
 Self-signed certificates and Let's Encrypt with =certbot= are supported.
 
-- Use the =ds-ufw= role to configure the firewall.
-- Use the =ds-posgresql= role to configure the database.
-- Use the =ds-nginx= role to install the proxy server.
-- Use the =ds-act_runner= role to configure and register Actions runners.
+The =ds-ufw= role can configure the firewall.
+
+The =ds-act_runner= role can configure and register Actions runners.
 
 * Role Behavior
 
 1. Download and install the Gitea binary
 2. (Optionally) Set up the PostgreSQL user and database
-3. Set up the user and group for the service
-4. Create the required directory structure
-5. Wait for the secret creation and storage in SOPS - if secrets are not present
-6. Deploy the Gitea configuration
-7. Deploy the Gitea systemd service file
-8. (Optionally) Set up the reverse proxy with optional SSL
-9. Enable and start the service
+3. (Optionally) Set up an =nginx= reverse proxy with SSL support
+4. Create a user and group for the service
+5. Create the required directory structure
+6. Wait to save the secrets in SOPS (only if secrets are not present)
+7. Deploy the Gitea =app.ini= configuration
+8. Deploy the Gitea systemd service
+9. Enable and start the services
 
 * Defaults
 
@@ -50,6 +49,7 @@ gitea_reverse_proxy: ''
 - ca-certificates
 - (optional) PosgreSQL database
 - (optional) Nginx server
+- (optional) certbot for Let's Encrypt
 
 * Variables
 
@@ -88,7 +88,7 @@ gitea_reverse_proxy: ''
 
 Always save the production secrets in SOPS, or in Ansible Vault.
 
-Generate the secrets manually when the playbook stops:
+You can generate the secrets manually when the playbook stops:
 
 #+begin_src shell
 gitea generate secret INTERNAL_TOKEN
