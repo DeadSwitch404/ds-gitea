@@ -99,6 +99,11 @@
     file: self-signed-cert.yml
   when: gitea_self_signed | default(false)
 
+- name: Configure the Let's Encrypt certificates
+  ansible.builtin.include_tasks:
+    file: lets-encrypt.yml
+  when: gitea_lets_encrypt | default(false)
+  
 - name: Pause to generate and save the secrets in SOPS
   ansible.builtin.pause:
     prompt: |

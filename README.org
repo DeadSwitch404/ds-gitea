@@ -9,10 +9,12 @@ This role installs and configures a [[https://docs.gitea.com/][Gitea]] server.
 It uses SQLite as its default database service - with optional PostgreSQL support.
 
 The role can set up a reverse proxy with SSL using Nginx.
+Self-signed certificates and Let's Encrypt with =certbot= are supported.
 
 - Use the =ds-ufw= role to configure the firewall.
 - Use the =ds-posgresql= role to configure the database.
 - Use the =ds-nginx= role to install the proxy server.
+- Use the =ds-act_runner= role to configure and register Actions runners.
 
 * Role Behavior
 
@@ -40,7 +42,7 @@ gitea_reverse_proxy: ''
 * Requirements
 
 - Ansible >= 2.12
-- Debian-based OS (Bookworm, Trixie)
+- Debian 12+ or compatible
 - git
 - sudo
 - ca-certificates
@@ -72,6 +74,8 @@ gitea_reverse_proxy: ''
 | gitea_ssl_key              | string  | SSL key                                      |
 | gitea_enable_http_redirect | boolean | Redirect HTTP to HTTPS                       |
 | gitea_self_signed          | boolean | Generate a self-signed cert and key          |
+| gitea_lets_encrypt         | boolean | Use certbot to configure the SSL             |
+| gitea_certbot_email        | string  | Email to register the certificates           |
 
 * Handlers
 
@@ -109,20 +113,25 @@ Then re-run the playbook to finish the installation.
     gitea_ssh_domain: gitea.tomsitcafe.com
     gitea_domain: gitea.tomsitcafe.com
     gitea_http_port: 3000
-    gitea_root_url: http://gitea.tomsitcafe.com:3000
+    gitea_root_url: https://gitea.tomsitcafe.com
 
     # Optional Postgresql database backend
     gitea_database_server: postgresql
 
     # Optional Nginx reverse proxy configuration
     gitea_reverse_proxy: nginx
-    gitea_enable_https: true
-    gitea_self_signed: true
-    gitea_ssl_cert: /var/lib/gitea/certs/cert.pem
-    gitea_ssl_key: /var/lib/gitea/certs/key.pem
-    gitea_enable_http_redirect: true
+    gitea_enable_https: true          # Use HTTPS
+    gitea_self_signed: false          # Don't generate self-signed certs
+    gitea_lets_encrypt: true          # Use certbot
+    gitea_enable_http_redirect: true  # Redirect HTTP to HTTPS
 
-    # In prod put these secrets in SOPS:
+    # Certbot configuration
+    gitea_certbot_email: email@domain.tld
+    gitea_ssl_cert: /etc/letsencrypt/live/{{ gitea_domain }}/fullchain.pem
+    gitea_ssl_key: /etc/letsencrypt/live/{{ gitea_domain }}/privkey.pem
+    gitea_ssl_trusted_certificate: /etc/letsencrypt/live/{{ gitea_domain }}/chain.pem 
+
+    # In prod put the secrets in SOPS:
     gitea_lfs_jwt_secret: G9bZrRHMhRQ8w4R0KkH2VLnx2rzq81ROQ951IQjlMs4 
     gitea_internal_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYmYiOjE3NzA2Mzk1Njh9.ybbaeNLFiLbyvxfj4vkqhXSAXKRGpwvP8jIm9YLPgXw
     gitea_jwt_secret: uJni4x4e0AzpkLYc-t4keRJKOB6EaLzwVsdLeamkFyU

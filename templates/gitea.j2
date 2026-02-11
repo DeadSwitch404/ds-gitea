@@ -8,9 +8,11 @@ server {
 
   ssl_certificate     {{ gitea_ssl_cert }};
   ssl_certificate_key {{ gitea_ssl_key }};
+{% if gitea_lets_encrypt | default(false) %}
+  ssl_trusted_certificate {{ gitea_ssl_trusted_certificate }};
+{% endif %}
 
-  ssl_protocols       TLSv1.2 TLSv1.3;
-  ssl_ciphers         HIGH:!aNULL:!MD5;
+  ssl_protocols TLSv1.2 TLSv1.3;
 
   client_max_body_size 50M;
 
@@ -30,7 +32,21 @@ server {
 server {
   listen 80;
   server_name {{ gitea_domain }};
+
+  {% if gitea_lets_encrypt | default(false) %}
+  # Allow Let's Encrypt to verify certificates
+  location ^~ /.well-known/acme-challenge/ {
+    root /var/www/html;
+    allow all;
+  }
+
+  # Redirect everything else to HTTPS
+  location / {
+    return 301 https://$host$request_uri;
+  }
+  {% else %}
   return 301 https://$host$request_uri;
+  {% endif %}
 }
 {% endif %}
 
