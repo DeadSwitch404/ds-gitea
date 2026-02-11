@@ -14,7 +14,7 @@
         gitea_ssh_domain: "{{ gitea_domain }}"
         gitea_http_port: 3000
         gitea_ssh_port: 22
-        gitea_root_url: https://{{ gitea_domain }}:{{ gitea_http_port }}
+        gitea_root_url: http://{{ gitea_domain }}:{{ gitea_http_port }}
         # Secrets to SOPS
         gitea_lfs_jwt_secret: G9bZrRHMhRQ8w4R0KkH2VLnx2rzq81ROQ951IQjlMs4 
         gitea_internal_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYmYiOjE3NzA2Mzk1Njh9.ybbaeNLFiLbyvxfj4vkqhXSAXKRGpwvP8jIm9YLPgXw
