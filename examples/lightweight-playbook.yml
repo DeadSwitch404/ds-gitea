@@ -1,0 +1,22 @@
+- name: Install Gitea
+  hosts: gitea
+  become: true
+
+  roles:
+    - role: ds-gitea
+      vars:
+        gitea_user: git
+        gitea_group: git
+        gitea_binary_url: https://dl.gitea.com/gitea/1.25.4/gitea-1.25.4-linux-amd64
+        gitea_checksum_url: https://dl.gitea.com/gitea/1.25.4/gitea-1.25.4-linux-amd64.sha256
+        gitea_app_name: Tom's IT Cafe Test Gitea Server
+        gitea_domain: gitea.tomsitcafe.com
+        gitea_ssh_domain: "{{ gitea_domain }}"
+        gitea_http_port: 3000
+        gitea_ssh_port: 22
+        gitea_root_url: https://{{ gitea_domain }}:{{ gitea_http_port }}
+        # Secrets to SOPS
+        gitea_lfs_jwt_secret: G9bZrRHMhRQ8w4R0KkH2VLnx2rzq81ROQ951IQjlMs4 
+        gitea_internal_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYmYiOjE3NzA2Mzk1Njh9.ybbaeNLFiLbyvxfj4vkqhXSAXKRGpwvP8jIm9YLPgXw
+        gitea_jwt_secret: uJni4x4e0AzpkLYc-t4keRJKOB6EaLzwVsdLeamkFyU
+        gitea_db_password: Eegh7Aothooph7pa6eu7eitha_zaim0G
