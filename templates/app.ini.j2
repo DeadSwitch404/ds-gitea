@@ -50,16 +50,15 @@ ENABLED = false
 [service]
 REGISTER_EMAIL_CONFIRM = false
 ENABLE_NOTIFY_MAIL = false
-DISABLE_REGISTRATION = false
+DISABLE_REGISTRATION = {{ gitea_disable_registration }}
 ALLOW_ONLY_EXTERNAL_REGISTRATION = false
 ENABLE_CAPTCHA = false
-REQUIRE_SIGNIN_VIEW = false
+REQUIRE_SIGNIN_VIEW = {{ gitea_require_signin_view }}
 DEFAULT_KEEP_EMAIL_PRIVATE = false
 DEFAULT_ALLOW_CREATE_ORGANIZATION = true
 DEFAULT_ENABLE_TIMETRACKING = true
 NO_REPLY_ADDRESS = noreply.localhost
-REGISTER_MANUAL_CONFIRM = true
-REQUIRE_SIGNIN_VIEW = {{ gitea_require_signin_view }}
+REGISTER_MANUAL_CONFIRM = {{ gitea_register_manual_confirm }}
 
 [openid]
 ENABLE_OPENID_SIGNIN = false
