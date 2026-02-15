@@ -4,3 +4,7 @@ gitea_group: git
 gitea_http_port: 3000
 gitea_ssh_port: 22
 gitea_require_signin_view: true
+gitea_disable_registration: true
+gitea_register_manual_confirm: false
+gitea_enable_captcha: false
+gitea_default_keep_email_private: true
