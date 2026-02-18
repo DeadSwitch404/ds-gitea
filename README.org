@@ -8,14 +8,11 @@
 
 This role can install and configures a [[https://docs.gitea.com/][Gitea]] server.
 
-It uses SQLite as its default database service - with optional PostgreSQL support (=ds-posgresql=).
-
-The role can set up a reverse proxy with SSL using Nginx (=ds-nginx=).
-Self-signed certificates and Let's Encrypt with =certbot= are supported.
-
-The =ds-ufw= role can configure the firewall.
-
-The =ds-act_runner= role can configure and register Actions runners.
+- It uses SQLite as its default database service - with optional PostgreSQL support (=ds-posgresql=).
+- The role can set up a reverse proxy with SSL using Nginx (=ds-nginx=).
+- Self-signed certificates and Let's Encrypt with =certbot= are supported.
+- The =ds-ufw= role can configure the firewall.
+- The =ds-act_runner= role can configure and register Actions runners.
 
 * Role Behavior
 
