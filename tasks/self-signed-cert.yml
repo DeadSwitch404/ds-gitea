@@ -13,6 +13,7 @@
     --host {{ gitea_domain }},{{ gitea_ssh_domain }}
     --out /var/lib/gitea/certs/cert.pem
     --keyout /var/lib/gitea/certs/key.pem
+  become: true
   become_user: "{{ gitea_user }}"
   args:
     creates: /var/lib/gitea/certs/cert.pem

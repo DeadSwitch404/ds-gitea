@@ -9,6 +9,7 @@
     state: present
 
 - name: Set up the PostgreSQL database
+  when: gitea_database_server | default('') == "postgresql"
   block:
     - name: Ensure PostgreSQL Python client is installed
       ansible.builtin.apt:
@@ -21,6 +22,7 @@
         name: gitea
         password: "{{ gitea_db_password }}"
         role_attr_flags: "NOSUPERUSER,NOCREATEDB,NOCREATEROLE"
+      become: true
       become_user: postgres
 
     - name: Create the gitea database
@@ -31,6 +33,7 @@
         encoding: UTF8
         lc_collate: en_US.UTF-8
         lc_ctype: en_US.UTF-8
+      become: true
       become_user: postgres
 
     - name: Ensure pg_hba.conf has local access for gitea
@@ -39,12 +42,12 @@
         regexp: '^local\s+giteadb\s+gitea\s+'
         line: 'local    giteadb    gitea    scram-sha-256'
         state: present
-        backup: yes
+        backup: true
       notify:
         - Reload_postgresql
-  when: gitea_database_server | default('') == "postgresql"
 
 - name: Set up the reverse proxy
+  when: gitea_reverse_proxy | default('') == "nginx"
   block:
     - name: Deploy the site configuration
       ansible.builtin.template:
@@ -64,7 +67,6 @@
         group: root
         force: true
       notify: Reload_nginx
-  when: gitea_reverse_proxy | default('') == "nginx"
 
 - name: Create the gitea group
   ansible.builtin.group:
@@ -80,12 +82,15 @@
     password: '*'
     system: true
     create_home: true
-    
+
 - name: Download the Gitea binary
   ansible.builtin.get_url:
     url: "{{ gitea_binary_url }}"
     dest: /usr/local/bin/gitea
     checksum: "sha256:{{ gitea_checksum_url }}"
+    owner: "{{ gitea_user }}"
+    group: "{{ gitea_group }}"
+    mode: '0750'
 
 - name: Set the permissions of the Gitea binary
   ansible.builtin.file:
@@ -103,7 +108,7 @@
   ansible.builtin.include_tasks:
     file: lets-encrypt.yml
   when: gitea_lets_encrypt | default(false)
-  
+
 - name: Pause to generate and save the secrets in SOPS
   ansible.builtin.pause:
     prompt: |
@@ -170,7 +175,7 @@
     mode: '0640'
   notify:
     - Restart_gitea
-    
+
 - name: Start and enable Gitea
   ansible.builtin.systemd_service:
     name: gitea.service

@@ -4,7 +4,7 @@
 
 [[https://opensource.org/licenses/MIT][https://img.shields.io/badge/license-MIT-blue.svg]] [[https://img.shields.io/badge/version-3.0.2-green.svg]]
 
-* ds-gitea
+* ds_gitea
 
 This role can install and configures a [[https://docs.gitea.com/][Gitea]] server.
 
@@ -150,7 +150,7 @@ You can find more playbook examples in the =examples= directory.
     gitea_db_password: Eegh7Aothooph7pa6eu7eitha_zaim0G
 
   roles:
-    - role: ds-gitea
+    - role: ds_gitea
 #+end_src
 
 * License
