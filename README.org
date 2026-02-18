@@ -2,20 +2,17 @@
 #+AUTHOR: DeadSwitch | The Silent Architect
 #+OPTIONS: toc:nil num:nil \n:t
 
-[[https://opensource.org/licenses/MIT][https://img.shields.io/badge/license-MIT-blue.svg]] [[https://img.shields.io/badge/version-3.0.2-green.svg]]
+[[https://opensource.org/licenses/MIT][https://img.shields.io/badge/license-MIT-blue.svg]] [[https://img.shields.io/badge/version-3.0.3-green.svg]]
 
-* ds-gitea
+* ds_gitea
 
 This role can install and configures a [[https://docs.gitea.com/][Gitea]] server.
 
-It uses SQLite as its default database service - with optional PostgreSQL support (=ds-posgresql=).
-
-The role can set up a reverse proxy with SSL using Nginx (=ds-nginx=).
-Self-signed certificates and Let's Encrypt with =certbot= are supported.
-
-The =ds-ufw= role can configure the firewall.
-
-The =ds-act_runner= role can configure and register Actions runners.
+- It uses SQLite as its default database service - with optional PostgreSQL support (=ds-posgresql=).
+- The role can set up a reverse proxy with SSL using Nginx (=ds-nginx=).
+- Self-signed certificates and Let's Encrypt with =certbot= are supported.
+- The =ds-ufw= role can configure the firewall.
+- The =ds-act_runner= role can configure and register Actions runners.
 
 * Role Behavior
 
@@ -150,7 +147,7 @@ You can find more playbook examples in the =examples= directory.
     gitea_db_password: Eegh7Aothooph7pa6eu7eitha_zaim0G
 
   roles:
-    - role: ds-gitea
+    - role: ds_gitea
 #+end_src
 
 * License
