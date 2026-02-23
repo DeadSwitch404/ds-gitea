@@ -2,7 +2,7 @@
 
 APP_NAME = {{ gitea_app_name }}
 RUN_USER = {{ gitea_user }}
-WORK_PATH = /var/lib/gitea
+WORK_PATH = {{ gitea_work_path }}
 RUN_MODE = prod
 
 {% if gitea_database_server | default('') == "postgresql" %}
@@ -22,19 +22,19 @@ USER = {{ gitea_user }}
 PASSWD = 
 SCHEMA = 
 SSL_MODE = disable
-PATH = /var/lib/gitea/data/gitea.db
+PATH = {{ gitea_app_data_path }}/gitea.db
 LOG_SQL = false
 {% endif %}
 
 [repository]
-ROOT = /var/lib/gitea/data/gitea-repositories
+ROOT = {{ gitea_repo_root }}
 
 [server]
 SSH_DOMAIN = {{ gitea_ssh_domain }}
 DOMAIN = {{ gitea_domain }}
 HTTP_PORT = {{ gitea_http_port }}
 ROOT_URL = {{ gitea_root_url }}
-APP_DATA_PATH = /var/lib/gitea/data
+APP_DATA_PATH = {{ gitea_app_data_path }}
 DISABLE_SSH = false
 SSH_PORT = {{ gitea_ssh_port }}
 LFS_START_SERVER = true
@@ -42,7 +42,7 @@ LFS_JWT_SECRET = {{ gitea_lfs_jwt_secret }}
 OFFLINE_MODE = true
 
 [lfs]
-PATH = /var/lib/gitea/data/lfs
+PATH = {{ gitea_lfs_path }}
 
 [mailer]
 ENABLED = false
@@ -73,7 +73,7 @@ PROVIDER = file
 [log]
 MODE = console
 LEVEL = info
-ROOT_PATH = /var/lib/gitea/log
+ROOT_PATH = {{ gitea_log_path }}
 
 [repository.pull-request]
 DEFAULT_MERGE_STYLE = merge

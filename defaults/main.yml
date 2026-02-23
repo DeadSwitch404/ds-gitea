@@ -3,6 +3,11 @@ gitea_user: git
 gitea_group: git
 gitea_http_port: 3000
 gitea_ssh_port: 22
+gitea_work_path: /var/lib/gitea
+gitea_app_data_path: /var/lib/gitea/data
+gitea_repo_root: /var/lib/gitea/data/gitea-repositories
+gitea_lfs_path: /var/lib/gitea/data/lfs
+gitea_log_path: /var/lib/gitea/log
 gitea_require_signin_view: true
 gitea_disable_registration: true
 gitea_register_manual_confirm: false
