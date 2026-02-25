@@ -130,7 +130,7 @@
 
 - name: Create the data dir base
   ansible.builtin.file:
-    path: /var/lib/gitea
+    path: "{{ gitea_work_path }}"
     owner: "{{ gitea_user }}"
     group: "{{ gitea_group }}"
     mode: '0750'
@@ -144,9 +144,9 @@
     mode: '0750'
     state: directory
   loop:
-    - /var/lib/gitea/custom
-    - /var/lib/gitea/data
-    - /var/lib/gitea/log
+    - "{{ gitea_work_path }}/custom"
+    - "{{ gitea_app_data_path }}"
+    - "{{ gitea_log_path }}"
 
 - name: Create the config dir
   ansible.builtin.file:

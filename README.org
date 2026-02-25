@@ -2,17 +2,17 @@
 #+AUTHOR: DeadSwitch | The Silent Architect
 #+OPTIONS: toc:nil num:nil \n:t
 
-[[https://opensource.org/licenses/MIT][https://img.shields.io/badge/license-MIT-blue.svg]] [[https://img.shields.io/badge/version-3.0.3-green.svg]]
+[[https://opensource.org/licenses/MIT][https://img.shields.io/badge/license-MIT-blue.svg]] [[https://img.shields.io/badge/version-3.1.0-green.svg]]
 
 * ds_gitea
 
 This role can install and configures a [[https://docs.gitea.com/][Gitea]] server.
 
-- It uses SQLite as its default database service - with optional PostgreSQL support (=ds-posgresql=).
-- The role can set up a reverse proxy with SSL using Nginx (=ds-nginx=).
-- Self-signed certificates and Let's Encrypt with =certbot= are supported.
-- The =ds-ufw= role can configure the firewall.
-- The =ds-act_runner= role can configure and register Actions runners.
+- Defaults to SQLite backend with optional PostgreSQL support (Install it with =ds_posgresql=).
+- It can set up a reverse proxy with SSL using Nginx (Install it with =ds_nginx=).
+- The role supports self-signed certificates and /Let's Encrypt/ with =certbot=.
+- The =ds_ufw= role can configure the host firewall.
+- The =ds_act_runner= role can configure and register /Gitea Actions/ runners.
 
 * Role Behavior
 
@@ -21,7 +21,7 @@ This role can install and configures a [[https://docs.gitea.com/][Gitea]] server
 3. (Optionally) Set up an =nginx= reverse proxy with SSL support
 4. Create a user and group for the service
 5. Create the required directory structure
-6. Wait to save the secrets in SOPS (only if secrets are not present)
+6. Wait for the operator to save the secrets in SOPS or Ansible Vault (only if secrets are not present)
 7. Deploy the Gitea =app.ini= configuration
 8. Deploy the Gitea systemd service
 9. Enable and start the services
@@ -33,6 +33,11 @@ gitea_user: git
 gitea_group: git
 gitea_http_port: 3000
 gitea_ssh_port: 22
+gitea_work_path: /var/lib/gitea
+gitea_app_data_path: /var/lib/gitea/data
+gitea_repo_root: /var/lib/gitea/data/gitea-repositories
+gitea_lfs_path: /var/lib/gitea/data/lfs
+gitea_log_path: /var/lib/gitea/log
 gitea_require_signin_view: true
 gitea_disable_registration: true
 gitea_register_manual_confirm: false
@@ -53,45 +58,46 @@ gitea_default_keep_email_private: true
 
 * Variables
 
-| Variable                         | Type    | Comment                                          |
-|----------------------------------+---------+--------------------------------------------------|
-| gitea_user                       | string  | Gitea user                                       |
-| gitea_group                      | string  | Gitea group                                      |
-| gitea_binary_url                 | string  | Download URL of Gitea                            |
-| gitea_checksum_url               | string  | Checksum URL of the binary                       |
-| gitea_app_name                   | string  | Gitea server title                               |
-| gitea_ssh_domain                 | string  | SSH domain                                       |
-| gitea_domain                     | string  | Domain to reach Gitea                            |
-| gitea_http_port                  | int     | HTTP port                                        |
-| gitea_ssh_port                   | int     | SSH port                                         |
-| gitea_root_url                   | string  | Protocol + FQDN + port                           |
-| gitea_lfs_jwt_secret             | string  | LFS storage secret                               |
-| gitea_internal_token             | string  | Internal token                                   |
-| gitea_jwt_secret                 | string  | JWT secret                                       |
-| gitea_database_server            | string  | DB server - 'postgresql' or empty for sqlite     |
-| gitea_db_password                | string  | PosgreSQL db password (if pgsql is used)         |
-| gitea_reverse_proxy              | string  | Reverse proxy to use or not set for no proxy     |
-| gitea_enable_https               | boolean | Configure HTTPS in the proxy                     |
-| gitea_ssl_cert                   | string  | SSL certificate                                  |
-| gitea_ssl_key                    | string  | SSL key                                          |
-| gitea_enable_http_redirect       | boolean | Redirect HTTP to HTTPS                           |
-| gitea_self_signed                | boolean | Generate a self-signed cert and key              |
-| gitea_lets_encrypt               | boolean | Use certbot to configure the SSL                 |
-| gitea_certbot_email              | string  | Email to register the certificates               |
-| gitea_require_signin_view        | boolean | If false, public repos are visible without login |
-| gitea_disable_registration       | boolean | Turn off the user registration feature           |
-| gitea_register_manual_confirm    | boolean | Registration requires admin verification         |
-| gitea_enable_captcha             | boolean | Enable captcha for registration                  |
-| gitea_default_keep_email_private | boolean | Default email policy: private                    |
-
-* Handlers
-
-- =Reload_systemd=: It runs a =daemon-reload=
-- =Restart_gitea=: It restarts the Gitea service
+| Variable                         | Type    | Comment                                                 |
+|----------------------------------+---------+---------------------------------------------------------|
+| gitea_user                       | string  | Gitea user                                              |
+| gitea_group                      | string  | Gitea group                                             |
+| gitea_binary_url                 | string  | Download URL of Gitea                                   |
+| gitea_checksum_url               | string  | Checksum URL of the binary                              |
+| gitea_app_name                   | string  | Gitea server title                                      |
+| gitea_ssh_domain                 | string  | SSH domain                                              |
+| gitea_domain                     | string  | Domain to reach Gitea                                   |
+| gitea_http_port                  | int     | HTTP port                                               |
+| gitea_ssh_port                   | int     | SSH port                                                |
+| gitea_work_path                  | string  | Workdir                                                 |
+| gitea_app_data_path              | string  | Application data path                                   |
+| gitea_repo_root                  | string  | Repo root path                                          |
+| gitea_lfs_path                   | string  | LFS path                                                |
+| gitea_log_path                   | string  | Log path                                                |
+| gitea_root_url                   | string  | Protocol + FQDN + port                                  |
+| gitea_lfs_jwt_secret             | string  | LFS storage secret                                      |
+| gitea_internal_token             | string  | Internal token                                          |
+| gitea_jwt_secret                 | string  | JWT secret                                              |
+| gitea_database_server            | string  | DB server - 'postgresql' or empty for sqlite            |
+| gitea_db_password                | string  | PosgreSQL db password (if pgsql is used)                |
+| gitea_reverse_proxy              | string  | 'nginx' to set up a reverse proxy or empty for no proxy |
+| gitea_enable_https               | boolean | Configure HTTPS in the proxy                            |
+| gitea_ssl_cert                   | string  | Path to the SSL certificate                             |
+| gitea_ssl_key                    | string  | Path to the SSL key                                     |
+| gitea_ssl_trusted_certificate    | string  | Path to the SSL certificate chain                       |
+| gitea_enable_http_redirect       | boolean | Redirect HTTP traffic to HTTPS                          |
+| gitea_self_signed                | boolean | Generate a self-signed certificate and key              |
+| gitea_lets_encrypt               | boolean | Use certbot to configure HTTPS                          |
+| gitea_certbot_email              | string  | Email to register the certificates                      |
+| gitea_require_signin_view        | boolean | If false, public repos are visible without login        |
+| gitea_disable_registration       | boolean | Turn off the user registration feature                  |
+| gitea_register_manual_confirm    | boolean | Registration requires admin verification                |
+| gitea_enable_captcha             | boolean | Enable captcha for registration                         |
+| gitea_default_keep_email_private | boolean | Default email policy: private                           |
 
 * Secrets
 
-Always save the production secrets in SOPS, or in Ansible Vault.
+Always save the production secrets in SOPS or in Ansible Vault.
 
 You can generate the secrets manually when the playbook stops:
 
@@ -100,7 +106,7 @@ gitea generate secret INTERNAL_TOKEN
 gitea generate secret JWT_SECRET
 #+end_src
 
-Use the =JWT_SECRET= command to generate the =gitea_lfs_jwt_secret= as well. It's an alias.
+Use the =JWT_SECRET= option to generate the =gitea_lfs_jwt_secret= as well.
 
 Then re-run the playbook to finish the installation.
 
