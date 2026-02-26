@@ -16,7 +16,7 @@ Group={{ gitea_group }}
 WorkingDirectory={{ gitea_work_path }}
 ExecStart=/usr/local/bin/gitea web --config /etc/gitea/app.ini
 Restart=always
-Environment=USER={{ gitea_user }} HOME=/home/{{ gitea_user }} GITEA_WORK_DIR={{ gitea_work_path }}
+Environment=USER={{ gitea_user }} HOME={{ gitea_work_path }} GITEA_WORK_DIR={{ gitea_work_path }}
 
 [Install]
 WantedBy=multi-user.target

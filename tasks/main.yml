@@ -76,8 +76,9 @@
 - name: Create the gitea user
   ansible.builtin.user:
     name: "{{ gitea_user }}"
+    comment: "Gitea Service User"
     group: "{{ gitea_group }}"
-    home: /home/{{ gitea_user }}
+    home: "{{ gitea_work_path }}"
     shell: /bin/bash
     password: '*'
     system: true
