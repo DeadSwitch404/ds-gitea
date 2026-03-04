@@ -1,10 +1,4 @@
 ---
-- name: Install certbot
-  ansible.builtin.apt:
-    name:
-      - certbot
-    state: present
-
 - name: Ensure webroot directory exists
   ansible.builtin.file:
     path: /var/www/html/.well-known/acme-challenge
