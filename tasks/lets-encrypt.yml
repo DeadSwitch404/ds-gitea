@@ -1,12 +1,4 @@
 ---
-- name: Ensure webroot directory exists
-  ansible.builtin.file:
-    path: /var/www/html/.well-known/acme-challenge
-    state: directory
-    owner: www-data
-    group: www-data
-    mode: '0755'
-
 - name: Obtain or renew TLS certificate (non-destructive)
   ansible.builtin.command:
     cmd: >
