@@ -1,0 +1,20 @@
+---
+galaxy_info:
+  role_name: ds_gitea
+  namespace: ds
+  author: "DeadSwitch"
+  description: "This role installs the Gitea server"
+  license: MIT
+  min_ansible_version: "2.14"
+  platforms:
+    - name: Debian
+      versions:
+        - buster
+        - bookworm
+        - trixie
+
+dependencies:
+  - role: ds_nginx
+  - role: ds_postgresql
+  - role: ds_ufw
+  - role: ds_users
