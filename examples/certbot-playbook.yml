@@ -22,7 +22,6 @@
         gitea_reverse_proxy: nginx
         gitea_enable_https: true
         gitea_lets_encrypt: true
-        gitea_enable_http_redirect: true
         gitea_certbot_email: tom@tomsitcafe.com
         gitea_ssl_cert: /etc/letsencrypt/live/{{ gitea_domain }}/fullchain.pem
         gitea_ssl_key: /etc/letsencrypt/live/{{ gitea_domain }}/privkey.pem

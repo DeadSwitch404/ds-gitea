@@ -12,50 +12,6 @@ server {
   ssl_trusted_certificate {{ gitea_ssl_trusted_certificate }};
 {% endif %}
 
-  ssl_protocols TLSv1.2 TLSv1.3;
-
-  client_max_body_size 50M;
-
-  location / {
-    client_max_body_size 512M;
-    proxy_pass http://localhost:{{ gitea_http_port }};
-    proxy_set_header Connection $http_connection;
-    proxy_set_header Upgrade $http_upgrade;
-    proxy_set_header Host $host;
-    proxy_set_header X-Real-IP $remote_addr;
-    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    proxy_set_header X-Forwarded-Proto $scheme;
-  }
-}
-
-{% if gitea_enable_http_redirect | default(true) %}
-server {
-  listen 80;
-  server_name {{ gitea_domain }};
-
-  {% if gitea_lets_encrypt | default(false) %}
-  # Allow Let's Encrypt to verify certificates
-  location ^~ /.well-known/acme-challenge/ {
-    root /var/www/html;
-    allow all;
-  }
-
-  # Redirect everything else to HTTPS
-  location / {
-    return 301 https://$host$request_uri;
-  }
-  {% else %}
-  return 301 https://$host$request_uri;
-  {% endif %}
-}
-{% endif %}
-
-{% else %}
-# HTTP-only configuration
-server {
-  listen 80;
-  server_name {{ gitea_domain }};
-
   client_max_body_size 50M;
 
   location / {

@@ -85,7 +85,6 @@ gitea_default_keep_email_private: true
 | gitea_ssl_cert                   | string  | Path to the SSL certificate                             |
 | gitea_ssl_key                    | string  | Path to the SSL key                                     |
 | gitea_ssl_trusted_certificate    | string  | Path to the SSL certificate chain                       |
-| gitea_enable_http_redirect       | boolean | Redirect HTTP traffic to HTTPS                          |
 | gitea_self_signed                | boolean | Generate a self-signed certificate and key              |
 | gitea_lets_encrypt               | boolean | Use certbot to configure HTTPS                          |
 | gitea_certbot_email              | string  | Email to register the certificates                      |
@@ -138,7 +137,6 @@ You can find more playbook examples in the =examples= directory.
     gitea_enable_https: true          # Use HTTPS
     gitea_self_signed: false          # Don't generate self-signed certs
     gitea_lets_encrypt: true          # Use certbot
-    gitea_enable_http_redirect: true  # Redirect HTTP to HTTPS
 
     # Certbot configuration
     gitea_certbot_email: email@domain.tld

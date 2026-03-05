@@ -68,21 +68,6 @@
         force: true
       notify: Reload_nginx
 
-- name: Create the gitea group
-  ansible.builtin.group:
-    name: "{{ gitea_group }}"
-    system: true
-
-- name: Create the gitea user
-  ansible.builtin.user:
-    name: "{{ gitea_user }}"
-    group: "{{ gitea_group }}"
-    home: /home/{{ gitea_user }}
-    shell: /bin/bash
-    password: '*'
-    system: true
-    create_home: true
-
 - name: Download the Gitea binary
   ansible.builtin.get_url:
     url: "{{ gitea_binary_url }}"
