@@ -23,7 +23,6 @@
         gitea_self_signed: true
         gitea_ssl_cert: /var/lib/gitea/certs/cert.pem
         gitea_ssl_key: /var/lib/gitea/certs/key.pem
-        gitea_enable_http_redirect: true
         # Secrets to SOPS
         gitea_lfs_jwt_secret: G9bZrRHMhRQ8w4R0KkH2VLnx2rzq81ROQ951IQjlMs4
         gitea_internal_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYmYiOjE3NzA2Mzk1Njh9.ybbaeNLFiLbyvxfj4vkqhXSAXKRGpwvP8jIm9YLPgXw
