@@ -2,8 +2,6 @@
 #+AUTHOR: DeadSwitch | The Silent Architect
 #+OPTIONS: toc:nil num:nil \n:t
 
-[[https://opensource.org/licenses/MIT][https://img.shields.io/badge/license-MIT-blue.svg]] [[https://img.shields.io/badge/version-3.1.0-green.svg]]
-
 * ds_gitea
 
 This role can install and configures a [[https://docs.gitea.com/][Gitea]] server.
