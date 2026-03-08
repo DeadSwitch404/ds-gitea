@@ -68,6 +68,15 @@
         force: true
       notify: Reload_nginx
 
+    - name: Deploy the rate limit configuration
+      ansible.builtin.template:
+        src: gitea_limits.conf.j2
+        dest: /etc/nginx/conf.d/gitea_limits.conf
+        owner: root
+        group: root
+        mode: '0644'
+      notify: Reload_nginx
+
 - name: Download the Gitea binary
   ansible.builtin.get_url:
     url: "{{ gitea_binary_url }}"
