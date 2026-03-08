@@ -15,7 +15,7 @@ server {
   client_max_body_size 512M;
 
 location / {
-    limit_req zone=gitea_limit burst=3 nodelay;
+    limit_req zone=gitea_limit burst={{ gitea_nginx_burst }} nodelay;
     limit_conn gitea_conn 20;
 
     proxy_read_timeout 300;

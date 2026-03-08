@@ -15,14 +15,15 @@ This role can install and configures a [[https://docs.gitea.com/][Gitea]] server
 * Role Behavior
 
 1. Download and install the Gitea binary
-2. (Optionally) Set up the PostgreSQL user and database
-3. (Optionally) Set up an =nginx= reverse proxy with SSL support
-4. Create a user and group for the service
-5. Create the required directory structure
-6. Wait for the operator to save the secrets in SOPS or Ansible Vault (only if secrets are not present)
-7. Deploy the Gitea =app.ini= configuration
-8. Deploy the Gitea systemd service
-9. Enable and start the services
+2. (Optional) Set up the PostgreSQL user and database
+3. (Optional) Set up an =nginx= reverse proxy with SSL support
+4. Set up default rate limiting when =nginx= is used
+5. Create a user and group for the service
+6. Create the required directory structure
+7. Wait for the operator to save the secrets in SOPS or Ansible Vault (only if secrets are not present)
+8. Deploy the Gitea =app.ini= configuration
+9. Deploy the Gitea systemd service
+10. Enable and start the services
 
 * Defaults
 
@@ -41,6 +42,8 @@ gitea_disable_registration: true
 gitea_register_manual_confirm: false
 gitea_enable_captcha: false
 gitea_default_keep_email_private: true
+gitea_nginx_ratelimit: '3r/s'
+gitea_nginx_burst: 5
 #+end_src
 
 * Requirements
@@ -78,6 +81,8 @@ gitea_default_keep_email_private: true
 | gitea_jwt_secret                 | string  | JWT secret                                              |
 | gitea_database_server            | string  | DB server - 'postgresql' or empty for sqlite            |
 | gitea_db_password                | string  | PosgreSQL db password (if pgsql is used)                |
+| gitea_nginx_ratelimit            | string  | Nginx rate limit (requests per sec)                     |
+| gitea_nginx_burst                | integer | Nginx burst for the reate limit                         |
 | gitea_reverse_proxy              | string  | 'nginx' to set up a reverse proxy or empty for no proxy |
 | gitea_enable_https               | boolean | Configure HTTPS in the proxy                            |
 | gitea_ssl_cert                   | string  | Path to the SSL certificate                             |
