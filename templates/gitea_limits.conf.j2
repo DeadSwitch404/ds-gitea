@@ -1,0 +1,4 @@
+# {{ ansible_managed }}
+
+limit_req_zone  $binary_remote_addr zone=gitea_limit:10m rate={{ gitea_nginx_ratelimit }};
+limit_conn_zone $binary_remote_addr zone=gitea_conn:10m;

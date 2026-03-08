@@ -13,3 +13,5 @@ gitea_disable_registration: true
 gitea_register_manual_confirm: false
 gitea_enable_captcha: false
 gitea_default_keep_email_private: true
+gitea_nginx_ratelimit: '3r/s'
+gitea_nginx_burst: 5
