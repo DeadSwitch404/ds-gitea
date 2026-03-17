@@ -4,10 +4,10 @@
 
 * ds_gitea
 
-This role can install and configures a [[https://docs.gitea.com/][Gitea]] server.
+This role installs and configures a [[https://docs.gitea.com/][Gitea]] server.
 
 - Defaults to SQLite backend with optional PostgreSQL support (Install it with =ds_posgresql=).
-- It can set up a reverse proxy with SSL using Nginx (Install it with =ds_nginx=).
+- Sets up a reverse proxy with SSL using Nginx (Install it with =ds_nginx=).
 - The role supports self-signed certificates and /Let's Encrypt/ with =certbot=.
 - The =ds_ufw= role can configure the host firewall.
 - The =ds_act_runner= role can configure and register /Gitea Actions/ runners.
@@ -147,7 +147,7 @@ You can find more playbook examples in the =examples= directory.
     gitea_ssl_key: /etc/letsencrypt/live/{{ gitea_domain }}/privkey.pem
     gitea_ssl_trusted_certificate: /etc/letsencrypt/live/{{ gitea_domain }}/chain.pem 
 
-    # In prod put the secrets in SOPS:
+    # In prod put these secrets in SOPS:
     gitea_lfs_jwt_secret: G9bZrRHMhRQ8w4R0KkH2VLnx2rzq81ROQ951IQjlMs4 
     gitea_internal_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYmYiOjE3NzA2Mzk1Njh9.ybbaeNLFiLbyvxfj4vkqhXSAXKRGpwvP8jIm9YLPgXw
     gitea_jwt_secret: uJni4x4e0AzpkLYc-t4keRJKOB6EaLzwVsdLeamkFyU
