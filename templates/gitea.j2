@@ -12,10 +12,15 @@ server {
   ssl_trusted_certificate {{ gitea_ssl_trusted_certificate }};
 {% endif %}
 
-  client_max_body_size 50M;
+  client_max_body_size 512M;
 
-  location / {
-    client_max_body_size 512M;
+location / {
+    limit_req zone=gitea_limit burst={{ gitea_nginx_burst }} nodelay;
+    limit_conn gitea_conn 20;
+
+    proxy_read_timeout 300;
+    proxy_send_timeout 300;
+
     proxy_pass http://localhost:{{ gitea_http_port }};
     proxy_set_header Connection $http_connection;
     proxy_set_header Upgrade $http_upgrade;

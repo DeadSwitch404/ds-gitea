@@ -4,10 +4,10 @@
 
 * ds_gitea
 
-This role can install and configures a [[https://docs.gitea.com/][Gitea]] server.
+This role installs and configures a [[https://docs.gitea.com/][Gitea]] server.
 
 - Defaults to SQLite backend with optional PostgreSQL support (Install it with =ds_posgresql=).
-- It can set up a reverse proxy with SSL using Nginx (Install it with =ds_nginx=).
+- Sets up a reverse proxy with SSL using Nginx (Install it with =ds_nginx=).
 - The role supports self-signed certificates and /Let's Encrypt/ with =certbot=.
 - The =ds_ufw= role can configure the host firewall.
 - The =ds_act_runner= role can configure and register /Gitea Actions/ runners.
@@ -15,14 +15,15 @@ This role can install and configures a [[https://docs.gitea.com/][Gitea]] server
 * Role Behavior
 
 1. Download and install the Gitea binary
-2. (Optionally) Set up the PostgreSQL user and database
-3. (Optionally) Set up an =nginx= reverse proxy with SSL support
-4. Create a user and group for the service
-5. Create the required directory structure
-6. Wait for the operator to save the secrets in SOPS or Ansible Vault (only if secrets are not present)
-7. Deploy the Gitea =app.ini= configuration
-8. Deploy the Gitea systemd service
-9. Enable and start the services
+2. (Optional) Set up the PostgreSQL user and database
+3. (Optional) Set up an =nginx= reverse proxy with SSL support
+4. Set up default rate limiting when =nginx= is used
+5. Create a user and group for the service
+6. Create the required directory structure
+7. Wait for the operator to save the secrets in SOPS or Ansible Vault (only if secrets are not present)
+8. Deploy the Gitea =app.ini= configuration
+9. Deploy the Gitea systemd service
+10. Enable and start the services
 
 * Defaults
 
@@ -41,6 +42,8 @@ gitea_disable_registration: true
 gitea_register_manual_confirm: false
 gitea_enable_captcha: false
 gitea_default_keep_email_private: true
+gitea_nginx_ratelimit: '3r/s'
+gitea_nginx_burst: 5
 #+end_src
 
 * Requirements
@@ -78,6 +81,8 @@ gitea_default_keep_email_private: true
 | gitea_jwt_secret                 | string  | JWT secret                                              |
 | gitea_database_server            | string  | DB server - 'postgresql' or empty for sqlite            |
 | gitea_db_password                | string  | PosgreSQL db password (if pgsql is used)                |
+| gitea_nginx_ratelimit            | string  | Nginx rate limit (requests per sec)                     |
+| gitea_nginx_burst                | integer | Nginx burst for the reate limit                         |
 | gitea_reverse_proxy              | string  | 'nginx' to set up a reverse proxy or empty for no proxy |
 | gitea_enable_https               | boolean | Configure HTTPS in the proxy                            |
 | gitea_ssl_cert                   | string  | Path to the SSL certificate                             |
@@ -142,7 +147,7 @@ You can find more playbook examples in the =examples= directory.
     gitea_ssl_key: /etc/letsencrypt/live/{{ gitea_domain }}/privkey.pem
     gitea_ssl_trusted_certificate: /etc/letsencrypt/live/{{ gitea_domain }}/chain.pem 
 
-    # In prod put the secrets in SOPS:
+    # In prod put these secrets in SOPS:
     gitea_lfs_jwt_secret: G9bZrRHMhRQ8w4R0KkH2VLnx2rzq81ROQ951IQjlMs4 
     gitea_internal_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYmYiOjE3NzA2Mzk1Njh9.ybbaeNLFiLbyvxfj4vkqhXSAXKRGpwvP8jIm9YLPgXw
     gitea_jwt_secret: uJni4x4e0AzpkLYc-t4keRJKOB6EaLzwVsdLeamkFyU
