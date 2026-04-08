@@ -44,6 +44,7 @@ gitea_enable_captcha: false
 gitea_default_keep_email_private: true
 gitea_nginx_ratelimit: '3r/s'
 gitea_nginx_burst: 5
+gitea_actions_enabled: false
 #+end_src
 
 * Requirements
@@ -96,6 +97,7 @@ gitea_nginx_burst: 5
 | gitea_register_manual_confirm    | boolean | Registration requires admin verification                |
 | gitea_enable_captcha             | boolean | Enable captcha for registration                         |
 | gitea_default_keep_email_private | boolean | Default email policy: private                           |
+| gitea_actions_enabled            | boolean | Enable or disable the Gitea Actions feature             |
 
 * Secrets
 
